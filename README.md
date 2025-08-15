@@ -1,1 +1,0 @@
-# TAKA-GHOR-USAR-APP

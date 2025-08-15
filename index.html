@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAKA GHOR - Earn Money</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4a148c; --secondary-color: #7b1fa2; --accent-color: #e91e63;
+            --light-color: #f3e5f5; --dark-color: #12005e; --success-color: #4caf50;
+            --warning-color: #ff9800; --info-color: #2196f3; --gold-color: #ffd700;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #fff; min-height: 100vh; padding-top: 120px; }
+        .container { max-width: 100%; padding: 15px; }
+        .developer-name, .user-name { position: fixed; top: 5px; background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); color: white; padding: 3px 10px; border-radius: 15px; font-size: 10px; z-index: 100; box-shadow: 0 4px 15px rgba(0,0,0,0.3); font-weight: bold; border: 1px solid rgba(255,255,255,0.2); }
+        .developer-name { left: 5px; }
+        .user-name { right: 5px; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .balance-card { background: linear-gradient(135deg, #2c3e50, #4a148c); color: white; border-radius: 15px; padding: 20px; margin-bottom: 25px; box-shadow: 0 8px 25px rgba(0,0,0,0.3); position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); }
+        .balance-amount { font-size: 32px; font-weight: bold; margin-bottom: 15px; color: var(--gold-color); }
+        .progress-container { background-color: rgba(0,0,0,0.3); border-radius: 10px; height: 10px; margin-bottom: 5px; }
+        .progress-bar { background: linear-gradient(90deg, var(--accent-color), #ff9800); height: 100%; border-radius: 10px; width: 0%; transition: width 0.5s ease; }
+        .progress-text { font-size: 12px; text-align: right; color: #ccc; }
+        .section-title { font-size: 18px; font-weight: bold; margin-bottom: 15px; color: var(--gold-color); display: flex; align-items: center; text-transform: uppercase; letter-spacing: 1px; }
+        .section-title i { margin-right: 10px; }
+        .btn-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+        .btn { background: linear-gradient(135deg, #7b1fa2, #4a148c); color: white; border: none; border-radius: 12px; padding: 15px 5px; font-size: 14px; font-weight: bold; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 6px 12px rgba(0,0,0,0.2); transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.15); }
+        .btn:hover:not(:disabled) { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .btn:disabled { background: #555; cursor: not-allowed; opacity: 0.7; }
+        .btn i { font-size: 24px; margin-bottom: 8px; color: var(--gold-color); }
+        .btn-success { background: linear-gradient(135deg, #2e7d32, #1b5e20); }
+        .btn-info { background: linear-gradient(135deg, #2196f3, #0d47a1); }
+        .btn-warning { background: linear-gradient(135deg, #ff9800, #f57c00); }
+        .btn-danger { background: linear-gradient(135deg, #c2185b, #880e4f); }
+        .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+        .page { display: none; }
+        .back-btn { background: linear-gradient(135deg, #4a148c, #7b1fa2); color: white; border: none; border-radius: 50%; width: 45px; height: 45px; font-size: 18px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; cursor: pointer; }
+        .ad-view { background: rgba(30, 30, 50, 0.7); border-radius: 15px; padding: 20px; margin-bottom: 20px; text-align: center; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-content { background: linear-gradient(135deg, #1e3c72, #2a5298); border-radius: 20px; width: 90%; max-width: 400px; padding: 25px; position: relative; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
+        .close-modal { position: absolute; top: 15px; right: 15px; font-size: 28px; cursor: pointer; color: #fff; }
+        .modal-title { font-size: 22px; font-weight: bold; margin-bottom: 15px; color: var(--gold-color); text-align: center; }
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; margin-bottom: 8px; font-weight: bold; color: #ddd; }
+        .form-control, .select-control { width: 100%; padding: 12px 18px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; font-size: 16px; color: white; }
+        .note-box { background: rgba(0,0,0,0.3); border-radius: 15px; padding: 20px; margin-top: 20px; font-size: 14px; }
+        .history-item { background: rgba(30, 30, 50, 0.6); border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1); }
+        .history-date { font-weight: bold; color: var(--gold-color); margin-bottom: 8px; }
+        .history-details { display: flex; justify-content: space-between; font-size: 14px; color: #ddd; }
+        .status-badge { padding: 3px 8px; border-radius: 10px; font-weight: bold; }
+        .status-Pending { background-color: var(--warning-color); color: #000; }
+        .status-Approved { background-color: var(--success-color); color: #fff; }
+        .status-Rejected { background-color: var(--accent-color); color: #fff; }
+        .referral-box { background: linear-gradient(135deg, #1a1a2e, #16213e); border-radius: 20px; padding: 25px; margin-bottom: 25px; text-align: center; }
+        .referral-code { background: rgba(0,0,0,0.3); border-radius: 15px; padding: 15px; font-family: monospace; font-size: 18px; font-weight: bold; color: var(--gold-color); margin: 20px 0; word-break: break-all; }
+        #login-page { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .login-container { background: rgba(30, 30, 50, 0.8); border-radius: 20px; padding: 30px; width: 100%; max-width: 400px; text-align: center; }
+        .login-logo { font-size: 36px; font-weight: bold; background: linear-gradient(45deg, var(--gold-color), #ff9800); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px; }
+        .login-title { font-size: 24px; margin-bottom: 30px; color: var(--gold-color); }
+        .login-input { width: 100%; padding: 14px 20px; margin-bottom: 20px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; font-size: 16px; color: white; }
+        .login-btn { background: linear-gradient(135deg, var(--success-color), #2e7d32); color: white; border: none; border-radius: 10px; padding: 14px; width: 100%; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .error-message { color: #ff5252; margin-bottom: 15px; font-size: 14px; display: none; }
+        #maintenance-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        #maintenance-overlay i { font-size: 50px; color: var(--warning-color); margin-bottom: 20px; }
+        #maintenance-overlay h2 { font-size: 24px; color: var(--gold-color); }
+    </style>
+</head>
+<body>
+    <div class="developer-name">MD SABBIR</div>
+    <div class="user-name" id="user-name-display"></div>
+    
+    <!-- Maintenance Mode Overlay -->
+    <div id="maintenance-overlay">
+        <i class="fas fa-tools"></i>
+        <h2>অ্যাপটি এখন রক্ষণাবেক্ষণে আছে।</h2>
+        <p style="color: #ccc; margin-top: 10px;">কিছুক্ষণের মধ্যে আবার ফিরে আসব।</p>
+    </div>
+
+    <!-- Login Page -->
+    <div id="login-page" class="page">
+        <div class="login-container">
+            <div class="login-logo">TAKA GHOR</div>
+            <div class="login-title">আপনার নাম লিখুন</div>
+            <div class="error-message" id="login-error">এই নামটি ইতিমধ্যে ব্যবহার করা হয়েছে।</div>
+            <form class="login-form" onsubmit="event.preventDefault(); handleLogin()">
+                <input type="text" id="user-name-input" class="login-input" placeholder="আপনার পুরো নাম লিখুন" required>
+                <button type="submit" class="login-btn">প্রবেশ করুন</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Home Page and other pages... -->
+    <div id="home-page" class="page">
+        <div class="container">
+            <div class="balance-card">
+                <div class="balance-amount" id="balance-amount">0 Points</div>
+                <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+                <div class="progress-text" id="progress-text">0/5000 Points</div>
+            </div>
+            <div class="ad-container">
+                <div class="section-title"><i class="fas fa-ad"></i> বিজ্ঞাপন দেখুন</div>
+                <div class="btn-grid">
+                    <button class="btn" id="ad-btn-1" onclick="showMonetagAd(1)"><i class="fas fa-ad"></i> বিজ্ঞাপন #1</button>
+                    <button class="btn" id="ad-btn-2" onclick="showMonetagAd(2)"><i class="fas fa-ad"></i> বিজ্ঞাপন #2</button>
+                    <button class="btn" id="ad-btn-3" onclick="showMonetagAd(3)"><i class="fas fa-ad"></i> বিজ্ঞাপন #3</button>
+                </div>
+            </div>
+            <div class="section-title"><i class="fas fa-bars"></i> মেনু</div>
+            <div class="menu-grid">
+                <button class="btn btn-success" onclick="showPage('withdraw-page')"><i class="fas fa-money-bill-wave"></i> উত্তোলন</button>
+                <button class="btn btn-info" onclick="showPage('history-page')"><i class="fas fa-history"></i> ইতিহাস</button>
+                <button class="btn btn-warning" onclick="showPage('referral-page')"><i class="fas fa-users"></i> রেফারেল</button>
+                 <button class="btn btn-danger" onclick="logout()"><i class="fas fa-sign-out-alt"></i> লগ আউট</button>
+            </div>
+            <button class="btn btn-info" onclick="window.open('https://t.me/TakaGhor_Official', '_blank')" style="width: 100%;"><i class="fab fa-telegram"></i> টেলিগ্রাম চ্যানেল</button>
+        </div>
+    </div>
+    <div id="withdraw-page" class="page"><div class="container"><button class="back-btn" onclick="showPage('home-page')"><i class="fas fa-arrow-left"></i></button><div class="section-title"><i class="fas fa-money-bill-wave"></i> টাকা উত্তোলন করুন</div><div class="ad-view"><div class="form-group"><label class="form-label">পেমেন্ট পদ্ধতি</label><select id="payment-method" class="select-control"><option value="">পদ্ধতি নির্বাচন করুন</option><option value="bkash">বিকাশ</option><option value="nagad">নগদ</option><option value="rocket">রকেট</option></select></div><div class="form-group"><label class="form-label">অ্যাকাউন্ট নম্বর</label><input type="text" id="account-number" class="form-control"></div><div class="form-group"><label class="form-label">উত্তোলনের পরিমাণ (পয়েন্ট)</label><input type="number" id="withdraw-amount" class="form-control" placeholder="ন্যূনতম 5000"></div><div class="note-box"><p>5000 পয়েন্ট = 20 টাকা</p></div><button class="btn btn-success" onclick="confirmWithdrawal()" style="width: 100%;">নিশ্চিত করুন</button></div></div></div>
+    <div id="history-page" class="page"><div class="container"><button class="back-btn" onclick="showPage('home-page')"><i class="fas fa-arrow-left"></i></button><div class="section-title"><i class="fas fa-history"></i> উত্তোলনের ইতিহাস</div><div id="history-list"></div></div></div>
+    <div id="referral-page" class="page"><div class="container"><button class="back-btn" onclick="showPage('home-page')"><i class="fas fa-arrow-left"></i></button><div class="section-title"><i class="fas fa-users"></i> রেফার করুন</div><div class="referral-box"><p>আপনার বন্ধুদের আমন্ত্রণ করুন!</p><div class="referral-code" id="referral-code">Loading...</div><button class="btn" onclick="copyReferralCode()"><i class="fas fa-copy"></i> লিংক কপি করুন</button></div></div></div>
+    
+    <!-- Modals -->
+    <div id="withdraw-modal" class="modal"><div class="modal-content"><span class="close-modal" onclick="closeModal('withdraw-modal')">&times;</span><div class="modal-title"><i class="fas fa-check-circle"></i> সফল!</div><p>আপনার অনুরোধ জমা দেওয়া হয়েছে।</p><button class="btn btn-success" style="width: 100%; margin-top: 20px;" onclick="closeModal('withdraw-modal')">ঠিক আছে</button></div></div>
+    <div id="notice-modal" class="modal"><div class="modal-content"><span class="close-modal" onclick="closeModal('notice-modal')">&times;</span><div class="modal-title" id="notice-title"></div><p id="notice-message"></p><button class="btn btn-info" style="width: 100%; margin-top: 20px;" onclick="closeModal('notice-modal')">বন্ধ করুন</button></div></div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+    <script>
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBMDxqBB46VATLc-_3CUXbrY1NR_CJMUtc",
+            authDomain: "taka-98473.firebaseapp.com",
+            databaseURL: "https://taka-98473-default-rtdb.firebaseio.com",
+            projectId: "taka-98473",
+            storageBucket: "taka-98473.appspot.com",
+            messagingSenderId: "24585300969",
+            appId: "1:24585300969:web:4dffe22b5564c4fd043978",
+            measurementId: "G-CSG1GZRBKS"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        let appState = {};
+        let monetagConfig = {};
+        let pointsConfig = {};
+
+        function sanitizeForFirebase(text) { return text.replace(/[.#$[\]]/g, '_'); }
+
+        function initApp() {
+            // Listen for App Control settings first
+            database.ref('config/appControl').on('value', (snapshot) => {
+                const control = snapshot.val();
+                if (control && !control.isAppRunning) {
+                    document.getElementById('maintenance-overlay').style.display = 'flex';
+                } else {
+                    document.getElementById('maintenance-overlay').style.display = 'none';
+                    // Show notice if active and not already shown in this session
+                    if (control && control.notice && control.notice.active && !sessionStorage.getItem('noticeShown')) {
+                        document.getElementById('notice-title').textContent = control.notice.title;
+                        document.getElementById('notice-message').textContent = control.notice.message;
+                        showModal('notice-modal');
+                        sessionStorage.setItem('noticeShown', 'true');
+                    }
+                }
+            });
+
+            const currentUser = localStorage.getItem('takaGhorCurrentUser');
+            if (currentUser) {
+                appState.userName = currentUser;
+                document.getElementById('user-name-display').textContent = appState.userName;
+                
+                const sanitizedUserName = sanitizeForFirebase(appState.userName);
+                database.ref('users/' + sanitizedUserName).on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        if (data.isBanned) {
+                            alert('আপনার অ্যাকাউন্ট ব্যান করা হয়েছে।');
+                            logout();
+                            return;
+                        }
+                        appState = data;
+                        updateUI();
+                    }
+                });
+
+                database.ref('config/monetag').on('value', (snapshot) => { monetagConfig = snapshot.val() || {}; setupMonetagAds(); });
+                database.ref('config/points').on('value', (snapshot) => { pointsConfig = snapshot.val() || {}; });
+
+                showPage('home-page');
+            } else {
+                showPage('login-page');
+            }
+        }
+        
+        async function handleLogin() {
+            const userName = document.getElementById('user-name-input').value.trim();
+            if (!userName) return;
+            const sanitizedUserName = sanitizeForFirebase(userName);
+            const userRef = database.ref('users/' + sanitizedUserName);
+            const snapshot = await userRef.once('value');
+
+            if (snapshot.exists()) {
+                const userData = snapshot.val();
+                if (userData.isBanned) {
+                    document.getElementById('login-error').textContent = 'আপনার অ্যাকাউন্ট ব্যান করা হয়েছে।';
+                    document.getElementById('login-error').style.display = 'block';
+                    return;
+                }
+                localStorage.setItem('takaGhorCurrentUser', userName);
+                initApp();
+            } else {
+                const newUserState = { userName, balance: 0, adsWatched: 0, isBanned: false, userId: 'USER' + Date.now() };
+                await userRef.set(newUserState);
+                localStorage.setItem('takaGhorCurrentUser', userName);
+                initApp();
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('takaGhorCurrentUser');
+            window.location.reload();
+        }
+
+        function showMonetagAd(adNumber) {
+            const zoneId = monetagConfig[`zoneId${adNumber}`];
+            if (!zoneId) { alert('বিজ্ঞাপনটি উপলব্ধ নেই।'); return; }
+
+            const adFunction = window[`show_${zoneId}`];
+            if (typeof adFunction === 'function') {
+                adFunction().then(() => {
+                    const pointsToAdd = pointsConfig.perAdView || 100;
+                    const newBalance = (appState.balance || 0) + pointsToAdd;
+                    const sanitizedUserName = sanitizeForFirebase(appState.userName);
+                    database.ref('users/' + sanitizedUserName + '/balance').set(newBalance);
+                    alert(`${pointsToAdd} পয়েন্ট যোগ করা হয়েছে!`);
+                }).catch(error => console.error('Ad error:', error));
+            }
+        }
+
+        function updateUI() {
+            const balance = appState.balance || 0;
+            document.getElementById('balance-amount').textContent = `${balance} Points`;
+            const progressPercent = Math.min((balance / 5000) * 100, 100);
+            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+            document.getElementById('progress-text').textContent = `${balance}/5000 Points`;
+            document.getElementById('referral-code').textContent = `https://t.me/TakaGhor_OfficialBot?start=ref-${appState.userId}`;
+            updateHistoryList();
+        }
+
+        function setupMonetagAds() { for (let i = 1; i <= 3; i++) { const zoneId = monetagConfig[`zoneId${i}`]; const adButton = document.getElementById(`ad-btn-${i}`); if (zoneId) { if (!document.querySelector(`script[data-zone='${zoneId}']`)) { const script = document.createElement('script'); script.src = '//libtl.com/sdk.js'; script.setAttribute('data-zone', zoneId); script.setAttribute('data-sdk', `show_${zoneId}`); document.head.appendChild(script); } adButton.disabled = false; } else { adButton.disabled = true; } } }
+        async function confirmWithdrawal() {
+            const method = document.getElementById('payment-method').value;
+            const account = document.getElementById('account-number').value;
+            const amount = parseInt(document.getElementById('withdraw-amount').value);
+            if (!method || !account || amount < 5000 || amount > appState.balance) { alert('সঠিক তথ্য দিন।'); return; }
+            const newBalance = appState.balance - amount;
+            const sanitizedUserName = sanitizeForFirebase(appState.userName);
+            const withdrawalRequest = { userName: appState.userName, sanitizedUserName, date: new Date().toISOString(), method, account, amount, taka: amount / 250, status: 'Pending' };
+            const withdrawalId = database.ref().child('withdrawals').push().key;
+            const updates = {};
+            updates[`/users/${sanitizedUserName}/balance`] = newBalance;
+            updates[`/users/${sanitizedUserName}/withdrawalHistory/${withdrawalId}`] = withdrawalRequest;
+            updates[`/withdrawals/${withdrawalId}`] = withdrawalRequest;
+            await database.ref().update(updates);
+            showModal('withdraw-modal');
+        }
+        function updateHistoryList() {
+            const historyList = document.getElementById('history-list');
+            historyList.innerHTML = '';
+            const history = appState.withdrawalHistory;
+            if (!history) { historyList.innerHTML = `<div class="history-item">কোনও ইতিহাস নেই</div>`; return; }
+            const sortedHistory = Object.values(history).sort((a, b) => new Date(b.date) - new Date(a.date));
+            sortedHistory.forEach(item => { const historyItem = document.createElement('div'); historyItem.className = 'history-item'; historyItem.innerHTML = `<div class="history-date">${new Date(item.date).toLocaleDateString()}</div><div class="history-details"><span>${item.method.toUpperCase()}: ${item.account}</span><span>${item.amount} পয়েন্ট</span></div><div class="history-details"><span>স্ট্যাটাস: <span class="status-badge status-${item.status}">${item.status}</span></span></div>`; historyList.appendChild(historyItem); });
+        }
+        function copyReferralCode() { navigator.clipboard.writeText(document.getElementById('referral-code').textContent).then(() => alert('লিংক কপি করা হয়েছে!')); }
+        function showPage(pageId) { document.querySelectorAll('.page').forEach(p => p.style.display = 'none'); document.getElementById(pageId).style.display = 'block'; }
+        function showModal(modalId) { document.getElementById(modalId).style.display = 'flex'; }
+        function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
+        
+        window.onload = initApp;
+    </script>
+</body>
+</html>
